@@ -1,39 +1,65 @@
+import { useState } from "react";
 import "./App.css";
-import { FiPaperclip, FiArrowUpCircle } from "react-icons/fi";
+import InputBox from "./components/InputBox";
+import DisplayArea from "./components/composite/DisplayArea";
+import PresentationArea from "./components/composite/PresentationArea";
+import TopBar from "./components/composite/TopBar";
 import { Button } from "./components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import useOpenAi from "./hooks/useOpenAIResponse";
 
 function App() {
-    return (
-        <>
-            <div className="flex border border-gray-300 justify-start items-end gap-1 rounded-lg p-2 ">
-                <FiPaperclip className="w-6 h-6" />
-                <textarea
-                    className="flex px-2 py-4 grow text-gray-400 object-cover whitespace-pre-line"
-                    placeholder="Enter text here.."
-                >
-                    Laboris ea officia nulla pariatur ex cillum nostrud commodo
-                    exercitation adipisicing in id deserunt quis. Officia
-                    aliquip ad voluptate pariatur amet duis reprehenderit
-                    proident cillum ea incididunt. Dolore dolore consectetur
-                    Lorem commodo esse deserunt nisi aliqua incididunt esse
-                    laborum nostrud. Qui velit enim ullamco do ipsum anim. Elit
-                    sint ut veniam officia sit ex id ea excepteur sit esse et
-                    sint. Ad commodo amet proident occaecat. Velit fugiat in
-                    labore aliquip. Aliquip excepteur ea magna occaecat aliqua
-                    tempor sint aute dolore tempor aliquip. Fugiat nulla sunt
-                    enim sit irure in eiusmod aute. Sit velit aliquip qui do
-                    consectetur esse consequat nostrud esse exercitation
-                    reprehenderit. Reprehenderit officia deserunt officia fugiat
-                    ipsum proident eiusmod. Magna duis ullamco elit nisi elit
-                    nisi. Aute pariatur deserunt occaecat in eu fugiat nostrud
-                    ad consequat laboris ad. Quis enim ex ad dolore ea veniam
-                    sit.
-                </textarea>
-                <FiArrowUpCircle className="w-6 h-6" />
-            </div>
-            <Button>Hello World</Button>
-        </>
-    );
+  const [displayMessageList, setDisplayMessageList] = useState<string[]>([]);
+
+  // wrote up the mutation function in a custom hook
+  const { getChatCompletion } = useOpenAi();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: getChatCompletion,
+    onSuccess: (data) => {
+      const responseMsg = data.content;
+      setDisplayMessageList([
+        ...displayMessageList,
+        responseMsg ? responseMsg : "Failed in getting a response",
+      ]);
+    },
+  });
+
+  const handleClick = () => {
+    // formatting messages into the format that OpenAI expects
+    const newList = displayMessageList.map((msg) => ({
+      role: "user" as const,
+      content: msg,
+    }));
+
+    // Add the system prompt to the beginning of the list
+    const formattedMessages = [
+      { role: "system" as const, content: "You are a helpful assistant." },
+      ...newList,
+    ];
+    mutate(formattedMessages);
+  };
+
+  return (
+    <div
+      id="container"
+      className="container relative flex h-full w-full flex-col"
+    >
+      <TopBar />
+      <PresentationArea>
+        <DisplayArea messages={displayMessageList} />
+      </PresentationArea>
+      <div className="center sticky bottom-0 flex flex-col justify-end gap-4 px-2 py-2">
+        <InputBox
+          inputText={displayMessageList}
+          setInputText={setDisplayMessageList}
+        />
+      </div>
+      <Button onClick={handleClick}>
+        {isPending ? "loading..." : "Make request"}
+      </Button>
+    </div>
+  );
 }
 
 export default App;
