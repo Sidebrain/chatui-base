@@ -7,6 +7,7 @@ import TopBar from "./components/composite/TopBar";
 import { Button } from "./components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import useOpenAi from "./hooks/useOpenAIResponse";
+import useSupabase from "./hooks/useSupabase";
 
 function App() {
   const [displayMessageList, setDisplayMessageList] = useState<string[]>([]);
@@ -14,14 +15,29 @@ function App() {
   // wrote up the mutation function in a custom hook
   const { getChatCompletion } = useOpenAi();
 
+  // funciton to add entried to database
+  const { addConversationEntries } = useSupabase();
+
   const { mutate, isPending } = useMutation({
     mutationFn: getChatCompletion,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const responseMsg = data.content;
-      setDisplayMessageList([
+      const newDisplayMessageList = [
         ...displayMessageList,
         responseMsg ? responseMsg : "Failed in getting a response",
-      ]);
+      ];
+      setDisplayMessageList(newDisplayMessageList);
+
+      // add the conversations to the db
+      try {
+        await addConversationEntries(newDisplayMessageList);
+        console.log("Added conversation entries to the database");
+      } catch (err) {
+        console.error(
+          "Failed to add conversation entries to the database",
+          err,
+        );
+      }
     },
   });
 

@@ -17,7 +17,8 @@ const useOpenAi = () => {
       console.log("openai", openai);
       const response = await openai.chat.completions.create({
         messages: messageList,
-        model: "gpt-4-turbo-preview",
+        model: "gpt-3.5-turbo",
+        // model: "gpt-4-turbo-preview",
       });
       return response.choices[0].message;
     } catch (err) {
