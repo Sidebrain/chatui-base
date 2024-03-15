@@ -1,11 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../services/supabaseClient";
 
 const useSupabase = () => {
-  const supabase = createClient(
-    import.meta.env.VITE_SUPABASE_PROJECT_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
-  );
-
   const addConversationEntries = async (messageList: string[]) => {
     // format the messages to how supabase expects them
     const formattedMsgs = messageList.map((msg) => ({
