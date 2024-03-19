@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import { MessageType } from "./useMessageStore";
 
 const useOpenAi = () => {
   // create main instance of OpenAI
@@ -8,9 +8,7 @@ const useOpenAi = () => {
     dangerouslyAllowBrowser: true,
   });
 
-  const getChatCompletion = async (
-    messageList: ChatCompletionMessageParam[],
-  ) => {
+  const getChatCompletion = async (messageList: MessageType[]) => {
     // ...
     try {
       console.log("messageList", messageList);
