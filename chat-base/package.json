@@ -29,7 +29,8 @@
         "react-markdown": "^9.0.1",
         "react-textarea-autosize": "^8.5.3",
         "tailwind-merge": "^2.2.1",
-        "tailwindcss-animate": "^1.0.7"
+        "tailwindcss-animate": "^1.0.7",
+        "zustand": "^4.5.2"
     },
     "devDependencies": {
         "@storybook/addon-essentials": "^7.6.17",
