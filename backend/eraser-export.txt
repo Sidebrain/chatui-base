@@ -1,0 +1,42 @@
+users [icon: user] {
+  id string pk
+  displayname string 
+  email email
+  phone phone
+}
+
+messages [icon: message-circle] {
+  id string pk
+  convId string fk
+  createdAt timestamp
+  model string
+  completionTokens number
+  prompt_tokens number
+  total_tokens number
+}
+
+conversations [icon: chat] {
+  id string pk
+  owner userId fk
+}
+
+conversations_users [icon: users] {
+  userId string fk
+  conversationId string fk
+}
+
+content_blocks [icon: layers] {
+  id string pk
+  messageId string fk
+  order int
+  type enum [text, link, image, video, etc.]
+  content string
+  metadata json
+}
+
+// Relationships
+conversations.owner > users.id
+conversations_users.userId > users.id
+conversations_users.conversationId > conversations.id
+messages.convId > conversations.id
+content_blocks.messageId > messages.id
