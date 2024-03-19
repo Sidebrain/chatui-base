@@ -7,16 +7,13 @@ import TopBar from "./components/composite/TopBar";
 import { Button } from "./components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import useOpenAi from "./hooks/useOpenAIResponse";
-import useSupabase from "./hooks/useSupabase";
+import ax from "./services/axiosClient";
 
 function App() {
   const [displayMessageList, setDisplayMessageList] = useState<string[]>([]);
 
   // wrote up the mutation function in a custom hook
   const { getChatCompletion } = useOpenAi();
-
-  // funciton to add entried to database
-  const { addConversationEntries } = useSupabase();
 
   const { mutate, isPending } = useMutation({
     mutationFn: getChatCompletion,
@@ -30,7 +27,11 @@ function App() {
 
       // add the conversations to the db
       try {
-        await addConversationEntries(newDisplayMessageList);
+        // await addConversationEntries(newDisplayMessageList);
+        ax.post("/converse", {
+          message: responseMsg,
+          sender: "user",
+        });
         console.log("Added conversation entries to the database");
       } catch (err) {
         console.error(
