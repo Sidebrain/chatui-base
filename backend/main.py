@@ -1,13 +1,12 @@
+from pydantic.main import BaseModel
 import uvicorn
-from fastapi import FastAPI, APIRouter, Query, HTTPException, Request, Depends
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, APIRouter, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-from typing import Optional, Any
-from pathlib import Path
+from typing import List
 from sqlalchemy.orm import Session
 
-from app import schemas, models
+from app import schemas
 from app import deps
 from app import crud
 
@@ -48,6 +47,24 @@ def converse(
     # return response
     print(agent_response)
     return agent_response
+
+class MessageInput(BaseModel):
+    content: str
+    role: str
+
+@api_router.post("/converse2", status_code=200, response_model=schemas.Message)
+def converse2(
+    input_msgs: List[MessageInput], db: Session = Depends(deps.get_db)
+) -> schemas.Message:
+    print("-"*30 + '\n', input_msgs, '\n' + "-"*30)
+    for msg in input_msgs:
+        input_schema = schemas.MessageCreate(
+            message=msg.content,
+            sender=msg.role,
+        )
+        print(input_schema)
+        response = crud.message.create(db=db, obj_in=input_schema)
+    return response
 
 
 app.include_router(api_router)
