@@ -1,21 +1,25 @@
-from sqlalchemy import Column, String, Text, Integer, DateTime
+from sqlalchemy import Column, String, Text, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql.functions import now
 
 from app.models.base_class import Base
+# from app.models.conversation import Conversation
 
 
 
 class Message(Base):
     # id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    createdAt: Mapped[DateTime] = mapped_column(
+    created_at: Mapped[DateTime] = mapped_column(
+
         DateTime(timezone=True), server_default=now(), nullable=False
     )
-    updatedAt: Mapped[DateTime] = mapped_column(
+    updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=now(), onupdate=now(), nullable=False
     )
-    sender: Mapped[str] = mapped_column(String, nullable=False)
-    message: Mapped[str] = mapped_column(Text)
+    role: Mapped[str] = mapped_column(String, nullable=False)
+    content: Mapped[str] = mapped_column(Text)
+    conv_id: Mapped[int] = mapped_column(ForeignKey("conversation.id"))
+    conversation: Mapped["Conversation"] = relationship(back_populates="messages")
 
 
 if __name__ == "__main__":
