@@ -66,6 +66,16 @@ def converse2(
         response = crud.message.create(db=db, obj_in=input_schema)
     return response
 
+def _converse():
+    """
+    1. Create a new conversation
+    2. Add messages to the conversation
+    3. Get response from api
+    4. Add response to db
+    5. Send response to client
+    """
+    pass
+
 
 app.include_router(api_router)
 
