@@ -2,36 +2,35 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Button } from "./ui/button";
 import { FiArrowUpCircle, FiPaperclip } from "react-icons/fi";
 import ReactTextareaAutosize from "react-textarea-autosize";
+import useMessageStore, { MessageType } from "@/hooks/useMessageStore";
 
-type InputBoxProps = {
-  setInputText: (inputText: string[]) => void;
-  inputText: string[];
-};
-
-const InputBox = ({ setInputText, inputText }: InputBoxProps) => {
+const InputBox = () => {
+  const { addMessage } = useMessageStore();
   const [internalText, setInternalText] = useState<string>("");
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInternalText(e.target.value);
   };
 
+  // add the internal message to the conversation list
+  const addInternalMessageToConversationList = () => {
+    const newMessage: MessageType = {
+      content: internalText,
+      role: "user",
+    };
+    addMessage(newMessage);
+  };
+
+  // if command + enter is pressed, add the message to the message list
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && e.metaKey) {
-      //   if (e.currentTarget.form !== null) {
-      //     handleSubmit(e.currentTarget.form);
-      //   }
-      //   e.preventDefault();
-      //   console.log(e);
-      const newInputText = [...inputText, internalText];
-      setInputText(newInputText);
+      addInternalMessageToConversationList();
       e.currentTarget.form?.reset();
     }
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement> | HTMLFormElement) => {
     e.preventDefault();
-    const newInputText = [...inputText, internalText];
-    // console.log(newInputText);
-    setInputText(newInputText);
+    addInternalMessageToConversationList();
     e.currentTarget.reset();
   };
   return (
