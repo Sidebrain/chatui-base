@@ -1,13 +1,13 @@
-import os
-from dotenv import load_dotenv
+from functionality.llm_clients import openai_client
 
-# load the .env files into the environment
-load_dotenv()
-
-# SQL_DATABASE_URL = "sqlite+pysqlite:///conversations.db"
-SQL_DATABASE_URL = os.getenv('SUPABASE_DIRECT_URL')
+messages = [
+    {"role": "system", "content": "Hello there, how may I assist you today?"},
+    {"role": "user", "content": "Who is the oldest person alive?"},
+]
+response = openai_client.chat.completions.create(
+    messages=messages, model="gpt-3.5-turbo"
+)
 
 if __name__ == "__main__":
-    print(SQL_DATABASE_URL, "SQL_DATABASE_URL")
-
-
+    print(response)
+    print()

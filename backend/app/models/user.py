@@ -1,4 +1,3 @@
-
 from typing import List
 from app.models.base_class import Base
 
@@ -7,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql.functions import now
 
 # from app.models.conversation import Conversation
+
 
 class User(Base):
     username: Mapped[str] = mapped_column(String, nullable=False)

@@ -1,14 +1,17 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class ConversationBase(BaseModel):
-    summary: str
-    description: str
+    summary: str = ""
+    description: str = ""
     pass
+
 
 class ConversationCreate(ConversationBase):
     owner_id: int
     pass
+
 
 class Conversation(ConversationBase):
     id: int

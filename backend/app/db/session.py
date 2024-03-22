@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 # load the .env files into the environment
 load_dotenv()
 
-SQL_DATABASE_URL = os.getenv('SUPABASE_DIRECT_URL')
+SQL_DATABASE_URL = os.getenv("SUPABASE_DIRECT_URL")
 
 engine = create_engine(
-    url=SQL_DATABASE_URL, echo=True, future=True,
+    url=SQL_DATABASE_URL,
+    echo=False,
+    future=True,
     # connect_args={"check_same_thread": False }
 )
 

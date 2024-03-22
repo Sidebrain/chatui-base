@@ -1,21 +1,31 @@
 from pydantic.main import BaseModel
 import uvicorn
-from fastapi import FastAPI, APIRouter, Request, Depends
+from fastapi import FastAPI, APIRouter, Request, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from typing import List
 from sqlalchemy.orm import Session
 
-from app import schemas
+from app import models, schemas
 from app import deps
 from app import crud
+from app.db.session import SessionLocal
+from functionality.call_llm import get_chat_response_from_openai
+from functionality.openai_types import ChatCompletionType
 
+import logging
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler("app.log")
+fh.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger.addHandler(fh)
 
 
 app = FastAPI()
 
-origins = ['*']
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,42 +41,52 @@ def root(request: Request, db: Session = Depends(deps.get_db)) -> dict:
     return {"HWE": "I seem to be working correctly"}
 
 
-@api_router.post("/converse", status_code=200, response_model=schemas.Message)
-def converse(
-    input_msg: schemas.MessageCreate, db: Session = Depends(deps.get_db)
-) -> schemas.Message:
-    # add message to database
-    msg_human = crud.message.create(db=db, obj_in=input_msg)
-    # get response
-    # add response to database
-    msg_agent = schemas.MessageCreate(
-        message="I ran from the api",
-        sender="human"
-    )
-    agent_response = crud.message.create(db=db, obj_in=msg_agent)
-    # return response
-    print(agent_response)
-    return agent_response
+@api_router.post(
+    "/converse/create_conversation",
+    status_code=200,
+    response_model=schemas.Conversation,
+)
+def create_conversation(
+    user_id: int, db: Session = Depends(deps.get_db)
+) -> schemas.Conversation:
+    return crud.conversation.create_conversation_or_return_empty(db, user_id)
 
-class MessageInput(BaseModel):
-    content: str
-    role: str
 
-@api_router.post("/converse2", status_code=200, response_model=schemas.Message)
-def converse2(
-    input_msgs: List[MessageInput], db: Session = Depends(deps.get_db)
+@api_router.post(
+    "/converse/add_message", status_code=200, response_model=schemas.Message
+)
+def add_message(
+    user_id: int,
+    message: schemas.MessageBase,
+    conv_id: int | None = None,
+    db: Session = Depends(deps.get_db),
 ) -> schemas.Message:
-    print("-"*30 + '\n', input_msgs, '\n' + "-"*30)
-    for msg in input_msgs:
-        input_schema = schemas.MessageCreate(
-            message=msg.content,
-            sender=msg.role,
+    logger.debug(f"Adding message to conversation for user_id: {user_id}")
+
+    if not conv_id:
+        conv: models.Conversation = (
+            crud.conversation.create_conversation_or_return_empty(db, user_id)
         )
-        print(input_schema)
-        response = crud.message.create(db=db, obj_in=input_schema)
-    return response
+    else:
+        conv: models.Conversation = crud.conversation.get(db, conv_id)
+    input_msg = schemas.MessageCreate(
+        content=message.content, role=message.role, conv_id=conv.id
+    )
+    # make some user access checks here
+    if conv.owner_id != user_id:
+        raise HTTPException(
+            status_code=401, detail="conversation returned is not owned by the user"
+        )
+    message: models.Message = crud.message.add_message_to_conversation(
+        db, conv.id, input_msg
+    )
+    return message
 
-def _converse():
+
+@api_router.post("/converse/v1", status_code=200, response_model=schemas.Message)
+def converse(
+    user_id: int, conv_id: int, db: Session = Depends(deps.get_db)
+) -> schemas.Message:
     """
     1. Create a new conversation
     2. Add messages to the conversation
@@ -74,7 +94,53 @@ def _converse():
     4. Add response to db
     5. Send response to client
     """
-    pass
+    # 0 Ensure user_id is valid
+    if not user_id:
+        logger.error("Invalid user_id")
+        raise HTTPException(
+            status_code=401, detail="Invalid user_id / no user_id provided"
+        )
+
+    user: models.User | None = crud.user.get(db, user_id)
+
+    if user is None:
+        logger.error("User not found")
+        raise HTTPException(status_code=404, detail="User not found")
+
+    logger.debug(f"Creating / retreiving conversation for user_id: {user_id}")
+    conversation = crud.conversation.get(db, conv_id)
+
+    # 1.1 Ensure conversation exists
+    if not conversation:
+        logger.error("Conversation not found")
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    # 1.2 Ensure user_id and conv.owner_id match
+    elif conversation.owner_id != user_id:
+        logger.error("User does not own this conversation")
+        raise HTTPException(
+            status_code=401, detail="User does not own this conversation"
+        )
+    # 1.3 Ensure conversation has atleast some messages
+    elif not conversation.messages:
+        logger.error("Conversation has no messages")
+        raise HTTPException(status_code=409, detail="Conversation has no messages")
+
+    # 2 Get response from api
+    response: ChatCompletionType = get_chat_response_from_openai(conversation.messages)
+    logger.debug(f"Response received from OpenAI")
+
+    # 3 Add response to db
+    response_msg = schemas.MessageCreate(
+        content=response.choices[0].message.content,
+        role=response.choices[0].message.role,
+        conv_id=conv_id,
+    )
+    response_msg_db = crud.message.add_message_to_conversation(
+        db, user_id, conv_id, response_msg
+    )
+
+    return response_msg_db
 
 
 app.include_router(api_router)
