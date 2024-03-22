@@ -1,7 +1,6 @@
 import InputBox from "@/components/InputBox";
 import DisplayArea from "@/components/composite/DisplayArea";
 import PresentationArea from "@/components/composite/PresentationArea";
-import TopBar from "@/components/composite/TopBar";
 import { Button } from "@/components/ui/button";
 import useDatabase from "@/hooks/useDatabase";
 import useMessageStore from "@/hooks/useMessageStore";
@@ -24,10 +23,9 @@ const ChatSection = () => {
 
   return (
     <div
-      id="container"
+      id="conversation-container"
       className="container relative flex h-full w-full flex-col"
     >
-      <TopBar />
       <PresentationArea>
         <DisplayArea messageList={messageList} />
       </PresentationArea>
