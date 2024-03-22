@@ -52,6 +52,27 @@ def create_conversation(
     return crud.conversation.create_conversation_or_return_empty(db, user_id)
 
 
+@api_router.get(
+    "/converse/get_all_messages_of_conversations",
+    status_code=200,
+    response_model=List[schemas.Message],
+)
+def get_all_messages_of_conversation(
+    conv_id: int, user_id: int, db: Session = Depends(deps.get_db)
+) -> List[schemas.Message]:
+    #! add test for this
+    message_list = crud.message.get_messages_by_conversation_id(db, conv_id)
+    if not message_list:
+        raise HTTPException(
+            status_code=404, detail="No messages found for this conversation"
+        )
+    if set([msg.conv_id for msg in message_list]) != set([conv_id]):
+        raise HTTPException(
+            status_code=404, detail="Conversation id mismatch in messages"
+        )
+    return message_list
+
+
 @api_router.post(
     "/converse/add_message", status_code=200, response_model=schemas.Message
 )
