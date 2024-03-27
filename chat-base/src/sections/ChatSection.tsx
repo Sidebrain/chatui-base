@@ -2,23 +2,24 @@ import InputBox from "@/components/InputBox";
 import DisplayArea from "@/components/composite/DisplayArea";
 import PresentationArea from "@/components/composite/PresentationArea";
 import { Button } from "@/components/ui/button";
-import useDatabase from "@/hooks/useDatabase";
+import { useGetResponseOfConversation } from "@/hooks/useBackendQueries";
 import useMessageStore from "@/hooks/useMessageStore";
-import useOpenAi from "@/hooks/useOpenAIResponse";
-import { useMutation } from "@tanstack/react-query";
 
-const ChatSection = () => {
+type ChatSectionProps = {
+  userId: number;
+  convId: number;
+};
+
+const ChatSection = ({ convId, userId }: ChatSectionProps) => {
   const { messageList } = useMessageStore();
-  const { getChatCompletion } = useOpenAi();
-  const { addMessagestoDatabase } = useDatabase();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: getChatCompletion,
-    onSuccess: async (data) => addMessagestoDatabase(data),
+  const { mutate, isPending } = useGetResponseOfConversation({
+    convId,
+    userId,
   });
 
   const handleClick = () => {
-    mutate(messageList);
+    mutate();
   };
 
   return (

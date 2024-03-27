@@ -53,7 +53,7 @@ def create_conversation(
 
 
 @api_router.get(
-    "/converse/get_all_messages_of_conversations",
+    "/converse/get_all_messages_of_conversation",
     status_code=200,
     response_model=List[schemas.Message],
 )
@@ -102,6 +102,19 @@ def add_message(
         db, conv.id, input_msg
     )
     return message
+
+
+@api_router.post(
+    "/converse/get_all_conversations_by_user_id",
+    status_code=200,
+    response_model=List[schemas.Conversation],
+)
+def get_all_conversations_by_user_id(
+    user_id: int, db: Session = Depends(deps.get_db)
+) -> List[schemas.Conversation]:
+    logger.debug(f"Getting all conversations for user_id: {user_id}")
+    conversations = crud.conversation.get_all_conversations_by_user_id(db, user_id)
+    return conversations
 
 
 @api_router.post("/converse/v1", status_code=200, response_model=schemas.Message)
