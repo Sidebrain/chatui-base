@@ -53,7 +53,7 @@ class CRUDMessage(CRUDBase[models.Message, schemas.MessageCreate]):
             return refreshed_objs
 
     def add_message_to_conversation(
-        self, db: Session, conv_id: int, msg_in: schemas.MessageCreate
+        self, db: Session, user_id: int, conv_id: int, msg_in: schemas.MessageCreate
     ) -> models.Message:
         logger.debug(f"Adding message to conversation for conv_id: {msg_in.conv_id}")
         if msg_in.conv_id != conv_id:

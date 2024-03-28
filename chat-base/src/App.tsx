@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import ChatSection from "./sections/ChatSection";
 import Sidebar from "./components/Sidebar";
@@ -10,26 +10,28 @@ import {
 import useMessageStore from "./hooks/useMessageStore";
 
 function App() {
-  const [userId, setUserId] = useState<number>(1);
-  const {
-    data: conversations,
-    isFetching,
-    isSuccess,
-  } = useGetConversationsByUserId(userId);
-  const [activeConvId, setActiveConvId] = useState<number>(
-    conversations ? conversations[0].id : 0,
-  );
-  const [toggleSidebar, setToggleSidebar] = useState<boolean>(true);
+  const [userId, setUserId] = useState<number>(1); // STATE
+
+  const { data: conversations } = useGetConversationsByUserId(userId);
+  const [convList, setConvList] = useState(conversations); // STATE
+
   const { loadNewMessageList } = useMessageStore();
 
+  // setting the active conversation id to the first conversation id
+  // this needs to be updated to be the empty conv
+  const [activeConvId, setActiveConvId] = useState<number>(
+    convList && convList.length > 0 ? convList[0].id : 0,
+  );
   const { data: newMessageList } = useGetMessagesFromConversation({
     userId,
     convId: activeConvId,
   });
 
-  if (newMessageList && newMessageList.length > 0) {
-    loadNewMessageList(newMessageList);
-  }
+  const [toggleSidebar, setToggleSidebar] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (newMessageList) loadNewMessageList(newMessageList);
+  }, [activeConvId, newMessageList, userId]);
 
   return (
     <div className="relative flex h-screen w-screen flex-col">

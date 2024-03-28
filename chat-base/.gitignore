@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# special files
+# Dist like files
+public/output.css
 
