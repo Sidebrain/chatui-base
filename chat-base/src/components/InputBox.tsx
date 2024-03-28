@@ -2,10 +2,17 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Button } from "./ui/button";
 import { FiArrowUpCircle, FiPaperclip } from "react-icons/fi";
 import ReactTextareaAutosize from "react-textarea-autosize";
-import useMessageStore, { MessageType } from "@/hooks/useMessageStore";
+import { useAddMessageToConversation } from "@/hooks/useBackendQueries";
+import useConversationStore from "@/hooks/useConversationStore";
+import { DefaultUserId } from "@/constants";
 
 const InputBox = () => {
-  const { addMessage } = useMessageStore();
+  // const { addMessage } = useMessageStore();
+  const { activeConvId } = useConversationStore((state) => ({
+    activeConvId: state.activeConvId,
+  }));
+
+  const { mutate } = useAddMessageToConversation();
   const [internalText, setInternalText] = useState<string>("");
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInternalText(e.target.value);
@@ -13,11 +20,16 @@ const InputBox = () => {
 
   // add the internal message to the conversation list
   const addInternalMessageToConversationList = () => {
-    const newMessage: MessageType = {
+    const newMessage = {
       content: internalText,
-      role: "user",
+      role: "user" as const,
     };
-    addMessage(newMessage);
+    if (!activeConvId) throw new Error("No active conversation");
+    mutate({
+      message: newMessage,
+      userId: DefaultUserId,
+      convId: activeConvId,
+    });
   };
 
   // if command + enter is pressed, add the message to the message list

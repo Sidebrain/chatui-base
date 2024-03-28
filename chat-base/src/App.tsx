@@ -8,31 +8,44 @@ import {
   useGetMessagesFromConversation,
 } from "./hooks/useBackendQueries";
 import useMessageStore from "./hooks/useMessageStore";
+import { DefaultUserId } from "./constants";
+import useConversationStore from "./hooks/useConversationStore";
 
 function App() {
-  const [userId, setUserId] = useState<number>(1); // STATE
+  const [userId, setUserId] = useState<number>(DefaultUserId); // STATE
+  const [toggleSidebar, setToggleSidebar] = useState<boolean>(true);
 
-  const { data: conversations } = useGetConversationsByUserId(userId);
-  const [convList, setConvList] = useState(conversations); // STATE
+  const {
+    initializeConversationStore,
+    conversations,
+    activeConvId,
+    setActiveConvId,
+  } = useConversationStore((state) => ({
+    initializeConversationStore: state.initializeConversationStore,
+    conversations: state.conversations,
+    activeConvId: state.activeConvId,
+    setActiveConvId: state.setActiveConvId,
+  }));
 
-  const { loadNewMessageList } = useMessageStore();
-
-  // setting the active conversation id to the first conversation id
-  // this needs to be updated to be the empty conv
-  const [activeConvId, setActiveConvId] = useState<number>(
-    convList && convList.length > 0 ? convList[0].id : 0,
+  const loadNewMessageList = useMessageStore(
+    (state) => state.loadNewMessageList,
   );
+
+
   const { data: newMessageList } = useGetMessagesFromConversation({
     userId,
     convId: activeConvId,
   });
 
-  const [toggleSidebar, setToggleSidebar] = useState<boolean>(true);
+  useEffect(() => {
+    initializeConversationStore();
+  }, [initializeConversationStore]);
 
   useEffect(() => {
     if (newMessageList) loadNewMessageList(newMessageList);
-  }, [activeConvId, newMessageList, userId]);
+  }, [activeConvId, newMessageList, userId, loadNewMessageList]);
 
+  if (!activeConvId) return <div>loading</div>;
   return (
     <div className="relative flex h-screen w-screen flex-col">
       <TopBar handleMenuClick={() => setToggleSidebar(!toggleSidebar)} />

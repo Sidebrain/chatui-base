@@ -31,19 +31,24 @@ const useGetResponseOfConversation = ({
   });
 };
 
-const useAddMessageToConversation = ({
-  message,
-  userId,
-  convId,
-}: AddMessagetoConversationType) => {
+const useAddMessageToConversation = () => {
   const queryClient = useQueryClient();
+  const mutationFnAddMsg = async ({
+    message,
+    userId,
+    convId,
+  }: AddMessagetoConversationType) => {
+    await backend.addMessagetoConversation({ message, userId, convId });
+    queryClient.invalidateQueries({
+      queryKey: ["getAllMessagesFromConversation", { convId, userId }],
+    });
+  };
   return useMutation({
-    mutationFn: async () =>
-      await backend.addMessagetoConversation({ message, userId, convId }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["getAllMessagesFromConversation", { convId, userId }],
-      }),
+    mutationFn: mutationFnAddMsg,
+    // onSuccess: () =>
+    //   queryClient.invalidateQueries({
+    //     queryKey: ["getAllMessagesFromConversation"],
+    //   }),
   });
 };
 

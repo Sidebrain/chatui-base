@@ -99,7 +99,7 @@ def add_message(
             status_code=401, detail="conversation returned is not owned by the user"
         )
     message: models.Message = crud.message.add_message_to_conversation(
-        db, conv.id, input_msg
+        db, user_id, conv.id, input_msg
     )
     return message
 
