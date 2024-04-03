@@ -3,6 +3,7 @@ import backend, {
 } from "@/services/backendService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthorizedConversationRequest } from "./useMessageStore";
+import useConversationStore from "./useConversationStore";
 
 const useGetMessagesFromConversation = ({
   convId,
@@ -21,7 +22,6 @@ const useGetResponseOfConversation = ({
 }: AuthorizedConversationRequest) => {
   const queryClient = useQueryClient();
   return useMutation({
-    // mutationKey: ["getResponseOfConversation", { convId, userId }],
     mutationFn: async () =>
       await backend.getResponseOfConversation({ convId, userId }),
     onSuccess: () =>
@@ -45,10 +45,6 @@ const useAddMessageToConversation = () => {
   };
   return useMutation({
     mutationFn: mutationFnAddMsg,
-    // onSuccess: () =>
-    //   queryClient.invalidateQueries({
-    //     queryKey: ["getAllMessagesFromConversation"],
-    //   }),
   });
 };
 
@@ -59,9 +55,31 @@ const useGetConversationsByUserId = (userId: number) => {
   });
 };
 
+const useCreateConversationForUserId = (userId: number) => {
+  const { addConversation, setActiveConvId } = useConversationStore(
+    (state) => ({
+      addConversation: state.addConversation,
+      setActiveConvId: state.setActiveConvId,
+    }),
+  );
+  // const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const newConv = await backend.createConversationForUserId(userId);
+      return newConv;
+    },
+    mutationKey: ["createConversation"],
+    onSuccess: (data) => {
+      addConversation(data);
+      setActiveConvId(data.id);
+    },
+  });
+};
+
 export {
   useGetMessagesFromConversation,
   useGetResponseOfConversation,
   useAddMessageToConversation,
   useGetConversationsByUserId,
+  useCreateConversationForUserId,
 };

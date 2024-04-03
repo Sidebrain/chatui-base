@@ -1,6 +1,5 @@
 import { FiEdit, FiGlobe } from "react-icons/fi";
 import StartNewChatButton from "./StartNewChatButton";
-import SidebarProfile from "./SidebarProfile";
 
 type SidebarProps = {
   children: React.ReactNode;
@@ -8,17 +7,13 @@ type SidebarProps = {
 
 const Sidebar = ({ children }: SidebarProps) => {
   return (
-    <div className="relative z-10 flex h-full w-2/3 flex-col justify-stretch overflow-x-clip overflow-y-scroll bg-gray-200 px-2 py-4">
+    <div className="relative z-10 flex h-full w-4/5 flex-col justify-stretch overflow-x-clip overflow-y-scroll bg-gray-200 px-2 py-4">
       <StartNewChatButton
         leftIcon={<FiGlobe />}
         rightIcon={<FiEdit />}
         text="ChatGpt"
       />
-      <div className="flex bg-gray-600">Hello</div>
       {children}
-      <div className="absolute bottom-0 flex rounded-md bg-white ">
-        <SidebarProfile />
-      </div>
     </div>
   );
 };

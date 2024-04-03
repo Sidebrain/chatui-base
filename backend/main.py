@@ -63,9 +63,10 @@ def get_all_messages_of_conversation(
     #! add test for this
     message_list = crud.message.get_messages_by_conversation_id(db, conv_id)
     if not message_list:
-        raise HTTPException(
-            status_code=404, detail="No messages found for this conversation"
-        )
+        return []
+        # raise HTTPException(
+        #     status_code=404, detail="No messages found for this conversation"
+        # )
     if set([msg.conv_id for msg in message_list]) != set([conv_id]):
         raise HTTPException(
             status_code=404, detail="Conversation id mismatch in messages"

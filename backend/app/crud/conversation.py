@@ -16,7 +16,11 @@ logger = logging.getLogger(__name__)
 class CRUDConversation(CRUDBase[models.Conversation, schemas.ConversationCreate]):
     def get_all_conversations_by_user_id(self, db: Session, user_id: int):
         logger.debug(f"Retrieving all conversations for user_id: {user_id}")
-        stmt = select(self.model).where(self.model.owner_id == user_id)
+        stmt = (
+            select(self.model)
+            .where(self.model.owner_id == user_id)
+            .order_by(self.model.updated_at.desc())
+        )
         return db.execute(stmt).scalars().all()
 
     def get_empty_conversations_by_user_id(self, db: Session, user_id: int):

@@ -9,6 +9,11 @@ type ConversationState = {
   initializeConversationStore: () => void;
   setActiveConvId: (convId: number) => void;
   setConversations: (conversations: ConversationBackendType[]) => void;
+  addConversation: (conversation: ConversationBackendType) => void;
+  setAll: (
+    convId: number | null,
+    conversations: ConversationBackendType[],
+  ) => void;
 };
 
 const useConversationStore = create<ConversationState>()((set) => ({
@@ -19,6 +24,12 @@ const useConversationStore = create<ConversationState>()((set) => ({
 
   setConversations: (conversations) =>
     set((state) => ({ ...state, conversations })),
+
+  addConversation: (conversation) =>
+    set((state) => ({
+      ...state,
+      conversations: [...state.conversations, conversation],
+    })),
 
   initializeConversationStore: async () => {
     try {
@@ -35,6 +46,7 @@ const useConversationStore = create<ConversationState>()((set) => ({
       throw new Error("Failed to initialize conversation store");
     }
   },
+  setAll: (activeConvId, conversations) => set({ activeConvId, conversations }),
 }));
 
 export default useConversationStore;

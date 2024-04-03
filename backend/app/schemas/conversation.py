@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+from app import schemas
+
 
 class ConversationBase(BaseModel):
     summary: str = ""
@@ -17,6 +19,7 @@ class Conversation(ConversationBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    messages: list[schemas.Message]
 
     class Config:
         from_attributes = True

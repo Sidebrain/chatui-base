@@ -18,6 +18,7 @@ export type ConversationBackendType = {
   owner_id: number;
   summary: string;
   description: string;
+  messages: MessageBackendType[];
 };
 
 const backend = {
@@ -115,6 +116,23 @@ const backend = {
       return response.data;
     } catch (err) {
       throw new Error("Failed to fetch messages from the database");
+    }
+  },
+
+  createConversationForUserId: async (userId: number) => {
+    try {
+      const newConversation = await ax.post<ConversationBackendType>(
+        "/converse/create_conversation",
+        {},
+        {
+          params: {
+            user_id: userId,
+          },
+        },
+      );
+      return newConversation.data;
+    } catch (err) {
+      throw new Error("Failed to create/retrieve empty conversation");
     }
   },
 };

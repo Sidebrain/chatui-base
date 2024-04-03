@@ -3,10 +3,7 @@ import "./App.css";
 import ChatSection from "./sections/ChatSection";
 import Sidebar from "./components/Sidebar";
 import TopBar from "./components/composite/TopBar";
-import {
-  useGetConversationsByUserId,
-  useGetMessagesFromConversation,
-} from "./hooks/useBackendQueries";
+import { useGetMessagesFromConversation } from "./hooks/useBackendQueries";
 import useMessageStore from "./hooks/useMessageStore";
 import { DefaultUserId } from "./constants";
 import useConversationStore from "./hooks/useConversationStore";
@@ -31,7 +28,6 @@ function App() {
     (state) => state.loadNewMessageList,
   );
 
-
   const { data: newMessageList } = useGetMessagesFromConversation({
     userId,
     convId: activeConvId,
@@ -47,8 +43,12 @@ function App() {
 
   if (!activeConvId) return <div>loading</div>;
   return (
-    <div className="relative flex h-screen w-screen flex-col">
+    <div
+      id="app-parent"
+      className="relative flex h-full w-full flex-col justify-stretch "
+    >
       <TopBar handleMenuClick={() => setToggleSidebar(!toggleSidebar)} />
+
       {toggleSidebar && (
         <div
           className="absolute left-0 top-0 z-10 flex h-full w-full"
@@ -59,10 +59,27 @@ function App() {
               conversations.map((conv) => (
                 <div
                   key={conv.id}
-                  className="flex items-center justify-start gap-4 p-2"
+                  className="flex items-center justify-start gap-4 p-2 focus:cursor-pointer"
                   onClick={() => setActiveConvId(conv.id)}
                 >
-                  <div className="text-sm">{conv.summary}</div>
+                  <div className="flex w-full flex-col gap-2 rounded-sm bg-slate-100 p-1 text-left text-sm ">
+                    {conv.messages[0]?.content ?? "New entry"}
+                    <div className="flex justify-between px-2">
+                      <p className="rounded-full bg-slate-800 px-1 text-xs text-gray-200">
+                        {conv.messages.length}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(conv.created_at).toLocaleDateString("en-US", {
+                          hour: "numeric",
+                          minute: "numeric",
+                          year: "2-digit",
+                          month: "short",
+                          day: "2-digit",
+                          hour12: true,
+                        })}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
           </Sidebar>

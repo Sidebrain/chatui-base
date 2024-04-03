@@ -25,17 +25,17 @@ const ChatSection = ({ convId, userId }: ChatSectionProps) => {
   return (
     <div
       id="conversation-container"
-      className="container relative flex h-full w-full flex-col"
+      className="container relative flex h-full w-full grow flex-col"
     >
       <PresentationArea>
         <DisplayArea messageList={messageList} />
       </PresentationArea>
-      <div className="center sticky bottom-0 flex flex-col justify-end gap-4 px-2 py-2">
+      <div className="center fixed bottom-0 flex flex-col justify-end gap-4 px-2 py-2">
         <InputBox />
+        <Button onClick={handleClick}>
+          {isPending ? "loading..." : "Make request"}
+        </Button>
       </div>
-      <Button onClick={handleClick}>
-        {isPending ? "loading..." : "Make request"}
-      </Button>
     </div>
   );
 };
