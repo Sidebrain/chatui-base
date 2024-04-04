@@ -2,10 +2,10 @@ import { FiGlobe } from "react-icons/fi";
 import HelperCard from "../HelperCard";
 import MessageGptStyle from "../MessageGptStyle";
 import { useEffect, useRef } from "react";
-import { MessageType } from "@/hooks/useMessageStore";
+import { MessageFrontendType } from "@/hooks/useMessageStore";
 
 type DisplayMessagesProps = {
-  messageList: MessageType[];
+  messageList: MessageFrontendType[];
 };
 
 const DisplayAreaHelperPromptCards = () => {
@@ -44,11 +44,7 @@ const DisplayAreaMessages = ({ messageList }: DisplayMessagesProps) => {
     >
       <div className="flex w-full flex-col items-start gap-4 self-stretch">
         {messageList.map((msg, idx) => (
-          <MessageGptStyle
-            messageText={msg.content}
-            key={idx}
-            sender="Assistant"
-          />
+          <MessageGptStyle content={msg.content} key={idx} role={msg.role} />
         ))}
         <div ref={dummyToScroll}></div>
       </div>
@@ -58,7 +54,7 @@ const DisplayAreaMessages = ({ messageList }: DisplayMessagesProps) => {
 
 const DisplayArea = ({ messageList }: DisplayMessagesProps) => {
   return (
-    <div className="flex grow flex-col justify-center gap-2 self-stretch py-2 ">
+    <div className="flex grow flex-col justify-center gap-2 self-stretch py-2">
       {messageList.length > 0 ? (
         <DisplayAreaMessages messageList={messageList} />
       ) : (
