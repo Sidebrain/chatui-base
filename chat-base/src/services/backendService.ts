@@ -49,9 +49,7 @@ const backend = {
     convId,
     userId,
   }: AuthorizedConversationRequest) => {
-    //
     try {
-      //
       const response = await ax.post<MessageBackendType>(
         "/converse/v1",
         {},
@@ -80,23 +78,14 @@ const backend = {
             user_id: userId,
             conv_id: convId,
           },
-          // transformResponse: [
-          //   (data: MessageBackendType[]): MessageFrontendType[] => {
-          //     return data.map((m) => ({
-          //       content: m.content,
-          //       role: m.role,
-          //     }));
-          //   },
-          // ],
         },
       );
-      console.log("response", response);
+      // console.log("response", response);
       const messages: MessageFrontendType[] = response.data.map((m) => ({
         content: m.content,
         role: m.role,
       }));
       return messages;
-      // return response.data;
     } catch (err) {
       throw new Error("Failed to fetch messages from the database");
     }

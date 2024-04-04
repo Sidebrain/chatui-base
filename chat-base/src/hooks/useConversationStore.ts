@@ -37,7 +37,7 @@ const useConversationStore = create<ConversationState>()((set) => ({
       const conversations =
         await backend.getAllConversationsByUserId(DefaultUserId);
       const length = conversations.length;
-      const activeConvId = length > 0 ? conversations[length - 1].id : null;
+      const activeConvId = length > 0 ? conversations[0].id : null;
       set({ activeConvId, conversations });
 
       // handle if there are no conversationspos
