@@ -1,0 +1,15 @@
+.git
+nginx/*
+
+backend/ignore
+backend/*.cache
+backend/**__pycache__
+backend/.git
+backend/.pytest*
+
+chat-base/node_modules
+chat-base/dist
+chat-base/.git
+
+
+

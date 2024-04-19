@@ -26,3 +26,6 @@ dist-ssr
 # Dist like files
 public/output.css
 
+# env files
+.env
+
