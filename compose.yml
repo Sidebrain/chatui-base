@@ -1,18 +1,4 @@
 services:
-    frontend:
-        build:
-            context: ./chat-base
-        container_name: chat-frontend
-        volumes:
-            - /app/chat-base/node_modules ## anonymous volume for node_modules
-            - ./chat-base:/app/chat-base
-        ports:
-            - 5179:5179
-        networks:
-            - default
-        depends_on:
-            - backend
-
     backend:
         build:
             context: ./backend
@@ -21,6 +7,8 @@ services:
             - ./backend:/app/backend
         ports:
             - 8008:8008
+        env_file:
+            - ./backend/.env
         networks:
             - default
 networks:
