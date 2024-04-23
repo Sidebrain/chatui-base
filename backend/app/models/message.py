@@ -21,8 +21,9 @@ class Message(Base):
     conversation: Mapped["Conversation"] = relationship(back_populates="messages")
     prompt_tokens: Mapped[int] = mapped_column(Integer, nullable=True)
     completion_tokens: Mapped[int] = mapped_column(Integer, nullable=True)
-    model: Mapped[str] = mapped_column(String, nullable=True)
     cost: Mapped[float] = mapped_column(Float, nullable=True)
+    llm_id: Mapped[int] = mapped_column(ForeignKey("llm.id"), nullable=True)
+    llm: Mapped["LLM"] = relationship(back_populates="messages")
 
 
 if __name__ == "__main__":
