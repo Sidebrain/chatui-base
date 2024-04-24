@@ -5,9 +5,9 @@ from fastapi import APIRouter
 
 from sqlalchemy.orm import Session
 
-from app import models, schemas, deps, crud
 from functionality.call_llm import get_chat_response_from_openai
 from functionality.openai_types import ChatCompletionType
+from app import models, schemas, deps, crud
 
 import logging
 

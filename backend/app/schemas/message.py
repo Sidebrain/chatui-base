@@ -29,7 +29,9 @@ class Message(MessageBase):
     created_at: datetime
     updated_at: datetime
 
-    # llm: Optional[schemas.LLM]
+    llm: Optional[
+        schemas.LLM
+    ]  # this is erroring out with `AttributeError: partially initialized module 'app.schemas' has no attribute 'LLM' (most likely due to a circular import)`
 
     class Config:
         from_attributes = True
