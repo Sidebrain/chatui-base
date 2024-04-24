@@ -58,18 +58,16 @@ class CRUDMessage(CRUDBase[models.Message, schemas.MessageCreate]):
         logger.debug(f"Adding message to conversation for conv_id: {msg_in.conv_id}")
         if msg_in.conv_id != conv_id:
             raise ValueError("Conversation id mismatch")
-        new_message = schemas.MessageCreate(
-            content=msg_in.content,
-            role=msg_in.role,
-            conv_id=msg_in.conv_id,
-        )
-
-        db_message = self.create(db=db, obj_in=new_message)
+        db_message = self.create(db=db, obj_in=msg_in)
 
         return db_message
 
     def get_messages_by_conversation_id(self, db: Session, conv_id: int):
-        stmt = select(self.model).where(self.model.conv_id == conv_id)
+        stmt = (
+            select(self.model)
+            .where(self.model.conv_id == conv_id)
+            .order_by(self.model.created_at.asc())
+        )
         return db.execute(stmt).scalars().all()
 
 

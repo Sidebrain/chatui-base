@@ -1,7 +1,4 @@
-from datetime import datetime
-from pydantic.main import BaseModel
-
-from app import models, schemas
+from app import models
 from functionality.openai_types import ChatCompletionType
 from .llm_clients import openai_client
 

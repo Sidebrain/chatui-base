@@ -8,13 +8,13 @@ from app import schemas
 class MessageBase(BaseModel):
     role: str
     content: str
-    prompt_tokens: Optional[int]
-    completion_tokens: Optional[int]
-    llm_id: Optional[int]
-    cost: Optional[float]
+    prompt_tokens: Optional[int] = None
+    completion_tokens: Optional[int] = None
+    cost: Optional[float] = None
 
 
 class MessageCreate(MessageBase):
+    llm_id: Optional[int] = None
     conv_id: int
     pass
 
@@ -28,7 +28,8 @@ class Message(MessageBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    llm: Optional[schemas.LLM]
+
+    # llm: Optional[schemas.LLM]
 
     class Config:
         from_attributes = True
