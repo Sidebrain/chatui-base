@@ -24,6 +24,11 @@ router = APIRouter(
 )
 
 
+@router.get("/models", status_code=200, response_model=list[schemas.LLM])
+def get_all_llms(db: Session = Depends(deps.get_db)) -> list[schemas.LLM]:
+    return crud.llm.get_all_available_llms(db)
+
+
 @router.post(
     "/create_conversation",
     status_code=200,
@@ -154,7 +159,7 @@ def converse(
         prompt_tokens=response.usage.prompt_tokens,
         completion_tokens=response.usage.completion_tokens,
         cost=0.0,  #! here you need to add the cost of the message
-        llm_id=5,  #! here you need to add the llm_id (for botth these you need to make a db call first)
+        llm_id=5,  #! here you need to add the llm_id (for both these you need to make a db call first)
     )
     response_msg_db = crud.message.add_message_to_conversation(
         db, user_id, conv_id, response_msg

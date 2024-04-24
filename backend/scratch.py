@@ -1,13 +1,12 @@
-from functionality.llm_clients import openai_client
-
-messages = [
-    {"role": "system", "content": "Hello there, how may I assist you today?"},
-    {"role": "user", "content": "Who is the oldest person alive?"},
-]
-response = openai_client.chat.completions.create(
-    messages=messages, model="gpt-3.5-turbo"
-)
+from app.crud import llm
+from app.deps import get_db
+from app.deps import get_db
 
 if __name__ == "__main__":
-    print(response)
-    print()
+    db_generator = get_db()
+    db = next(db_generator)
+    try:
+        all_llms = llm.get_all_available_llms(db)
+        print(*all_llms, sep="\n")
+    finally:
+        next(db_generator, None)

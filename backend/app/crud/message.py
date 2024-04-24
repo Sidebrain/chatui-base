@@ -26,7 +26,7 @@ class CRUDMessage(CRUDBase[models.Message, schemas.MessageCreate]):
     """
 
     def create_multiple(
-        self, db: Session, obj_in: List[schemas.MessageCreate], return_
+        self, db: Session, obj_in: List[schemas.MessageCreate]
     ) -> list[models.Message]:
         conv_id_of_thread = set([obj.conv_id for obj in obj_in])
 
