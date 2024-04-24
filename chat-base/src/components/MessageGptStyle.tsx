@@ -1,4 +1,4 @@
-import { MessageFrontendType } from "@/hooks/useMessageStore";
+import { MessageFrontendType } from "@/hooks/MessageFrontendType";
 import { FiUser } from "react-icons/fi";
 import Markdown from "react-markdown";
 
@@ -11,7 +11,7 @@ const MessageGptStyle = ({
 }: MessageFrontendType) => {
   return (
     <div
-      className={`flex w-full items-start gap-4 ${role === "assistant" && "bg-gray-200"} rounded p-4 `}
+      className={`flex w-full items-start gap-4 ${role === "assistant" && "bg-gray-100 pl-2"} rounded-md p-4 `}
     >
       <div className="flex items-start justify-center gap-2 self-stretch">
         <FiUser size={"24px"} />

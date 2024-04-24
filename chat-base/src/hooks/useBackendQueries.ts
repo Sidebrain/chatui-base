@@ -2,13 +2,16 @@ import backend, {
   AddMessagetoConversationType,
 } from "@/services/backendService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AuthorizedConversationRequest } from "./useMessageStore";
+import {
+  AuthorizedAIResponseRequestType,
+  AuthorizedConversationRequestType,
+} from "@/types/BackendDatabaseModelTypes";
 import useConversationStore from "./useConversationStore";
 
 const useGetMessagesFromConversation = ({
   convId,
   userId,
-}: AuthorizedConversationRequest) => {
+}: AuthorizedConversationRequestType) => {
   return useQuery({
     queryKey: ["getAllMessagesFromConversation", { convId, userId }],
     queryFn: async () =>
@@ -19,11 +22,17 @@ const useGetMessagesFromConversation = ({
 const useGetResponseOfConversation = ({
   convId,
   userId,
-}: AuthorizedConversationRequest) => {
+  selectedModel,
+}: AuthorizedAIResponseRequestType) => {
+  // backend expects the llm model along with the user id and conversation id
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () =>
-      await backend.getResponseOfConversation({ convId, userId }),
+      await backend.getResponseOfConversation({
+        convId,
+        userId,
+        selectedModel,
+      }),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: ["getAllMessagesFromConversation", { convId, userId }],
@@ -76,10 +85,18 @@ const useCreateConversationForUserId = (userId: number) => {
   });
 };
 
+const useGetAvailableLLMs = () => {
+  return useQuery({
+    queryKey: ["getAvailableLLMs"],
+    queryFn: async () => await backend.getAvailableLLMModels(),
+  });
+};
+
 export {
   useGetMessagesFromConversation,
   useGetResponseOfConversation,
   useAddMessageToConversation,
   useGetConversationsByUserId,
   useCreateConversationForUserId,
+  useGetAvailableLLMs,
 };

@@ -1,8 +1,9 @@
 import {
-  AuthorizedConversationRequest,
-  MessageBackendType,
-  MessageFrontendType,
-} from "@/hooks/useMessageStore";
+  AuthorizedAIResponseRequestType,
+  AuthorizedConversationRequestType,
+} from "@/types/BackendDatabaseModelTypes";
+import { LLMType, MessageBackendType } from "@/types/BackendDatabaseModelTypes";
+import { MessageFrontendType } from "@/hooks/MessageFrontendType";
 import ax from "@/services/axiosClient";
 
 export type AddMessagetoConversationType = {
@@ -48,11 +49,12 @@ const backend = {
   getResponseOfConversation: async ({
     convId,
     userId,
-  }: AuthorizedConversationRequest) => {
+    selectedModel,
+  }: AuthorizedAIResponseRequestType) => {
     try {
       const response = await ax.post<MessageBackendType>(
         "/converse/v1",
-        {},
+        selectedModel,
         {
           params: {
             user_id: userId,
@@ -69,7 +71,7 @@ const backend = {
   getAllMessagesOfConversation: async ({
     convId,
     userId,
-  }: AuthorizedConversationRequest) => {
+  }: AuthorizedConversationRequestType) => {
     try {
       const response = await ax.get<MessageBackendType[]>(
         "/converse/get_all_messages_of_conversation",
@@ -123,6 +125,15 @@ const backend = {
       return newConversation.data;
     } catch (err) {
       throw new Error("Failed to create/retrieve empty conversation");
+    }
+  },
+
+  getAvailableLLMModels: async () => {
+    try {
+      const response = await ax.get<LLMType[]>("/converse/models");
+      return response.data;
+    } catch (err) {
+      throw new Error("Failed to fetch models from the database");
     }
   },
 };

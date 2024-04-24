@@ -106,7 +106,7 @@ def get_all_conversations_by_user_id(
 
 @router.post("/v1", status_code=200, response_model=schemas.Message)
 def converse(
-    user_id: int, conv_id: int, db: Session = Depends(deps.get_db)
+    user_id: int, conv_id: int, llm: schemas.LLM, db: Session = Depends(deps.get_db)
 ) -> schemas.Message:
     """
     1. Create a new conversation
@@ -151,6 +151,12 @@ def converse(
     response: ChatCompletionType = get_chat_response_from_openai(conversation.messages)
     logger.debug(f"Response received from OpenAI")
 
+    # 2.1 get the cost of the response
+    cost = (
+        llm.prompt_tokens_cost * response.usage.prompt_tokens
+        + llm.completion_tokens_cost * response.usage.completion_tokens
+    )
+
     # 3 Add response to db
     response_msg = schemas.MessageCreate(
         content=response.choices[0].message.content,
@@ -158,8 +164,8 @@ def converse(
         conv_id=conv_id,
         prompt_tokens=response.usage.prompt_tokens,
         completion_tokens=response.usage.completion_tokens,
-        cost=0.0,  #! here you need to add the cost of the message
-        llm_id=5,  #! here you need to add the llm_id (for both these you need to make a db call first)
+        cost=cost,
+        llm_id=llm.id,
     )
     response_msg_db = crud.message.add_message_to_conversation(
         db, user_id, conv_id, response_msg

@@ -2,7 +2,7 @@ import { FiGlobe } from "react-icons/fi";
 import HelperCard from "../HelperCard";
 import MessageGptStyle from "../MessageGptStyle";
 import { useEffect, useRef } from "react";
-import { MessageFrontendType } from "@/hooks/useMessageStore";
+import { MessageFrontendType } from "@/hooks/MessageFrontendType";
 
 type DisplayMessagesProps = {
   messageList: MessageFrontendType[];
@@ -20,7 +20,10 @@ const DisplayAreaHelperPromptCards = () => {
 const DisplayAreaDefaultContent = () => {
   return (
     <>
-      <div className="flex grow flex-col justify-center gap-8">
+      <div
+        id="default-no-messages"
+        className="flex w-full flex-col justify-center gap-8"
+      >
         <div className="flex justify-center">
           <FiGlobe size={"40px"} />
         </div>
@@ -40,7 +43,7 @@ const DisplayAreaMessages = ({ messageList }: DisplayMessagesProps) => {
   return (
     <div
       id="conversation-area"
-      className="flex w-full grow flex-col items-center gap-4 self-stretch p-4"
+      className="flex w-full flex-col items-center gap-4 p-4"
     >
       <div className="flex w-full flex-col items-start gap-4 self-stretch">
         {messageList.map((msg, idx) => (
@@ -54,7 +57,7 @@ const DisplayAreaMessages = ({ messageList }: DisplayMessagesProps) => {
 
 const DisplayArea = ({ messageList }: DisplayMessagesProps) => {
   return (
-    <div className="flex grow flex-col justify-center gap-2 self-stretch py-2 ">
+    <div className="flex w-full grow flex-col justify-center gap-2 py-2 ">
       {messageList.length > 0 ? (
         <DisplayAreaMessages messageList={messageList} />
       ) : (

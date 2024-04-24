@@ -1,6 +1,7 @@
 import { useGetResponseOfConversation } from "@/hooks/useBackendQueries";
 import InputBox from "../InputBox";
 import { Button } from "../ui/button";
+import useMetaContextStore from "@/hooks/useMetaContextStore";
 
 type ChatSectionProps = {
   userId: number;
@@ -8,9 +9,16 @@ type ChatSectionProps = {
 };
 
 const InputTray = ({ activeConvId, userId }: ChatSectionProps) => {
+  const { selectedModel } = useMetaContextStore((state) => ({
+    selectedModel: state.selectedModel,
+  }));
+  // handle case where no model is selected
+  if (!selectedModel) throw new Error("No model selected");
+
   const { mutate, isPending } = useGetResponseOfConversation({
     convId: activeConvId,
     userId: userId,
+    selectedModel,
   });
   return (
     <>

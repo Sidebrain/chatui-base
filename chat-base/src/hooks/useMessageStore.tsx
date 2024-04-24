@@ -1,30 +1,5 @@
+import { MessageFrontendType } from "@/types/BackendDatabaseModelTypes";
 import { create } from "zustand";
-
-export type MessageFrontendType = MessageBackendType;
-
-// {
-//   content: string;
-//   role: "user" | "assistant" | "system";
-//   created_at: string;
-// };
-
-export type MessageBackendType = {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  role: "user" | "assistant" | "system";
-  content: string;
-  conv_id: number;
-  prompt_tokens: number;
-  completion_tokens: number;
-  cost: number;
-  llm_id: number;
-};
-
-export type AuthorizedConversationRequest = {
-  userId: number;
-  convId: number;
-};
 
 type MessageState = {
   messageList: MessageFrontendType[];
