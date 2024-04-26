@@ -34,16 +34,19 @@ const InputBox = () => {
 
   // if command + enter is pressed, add the message to the message list
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && e.metaKey) {
+    if (e.key === "Enter" && e.metaKey && internalText !== "") {
       addInternalMessageToConversationList();
       e.currentTarget.form?.reset();
+      setInternalText(() => ""); // clear the input box
     }
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement> | HTMLFormElement) => {
     e.preventDefault();
+    if (internalText === "") return;
     addInternalMessageToConversationList();
     e.currentTarget.reset();
+    setInternalText(() => ""); // clear the input box
   };
   return (
     <>
