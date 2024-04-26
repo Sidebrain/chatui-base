@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AllConversationsPage from "./routes/AllConversationsPage.tsx";
 import App from "./routes/App.tsx";
+import ErrorPage from "./routes/ErrorPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
         // index: true,
         path: "conversation",
         element: <ConversationThread />,
+        errorElement: <ErrorPage />,
       },
     ],
   },

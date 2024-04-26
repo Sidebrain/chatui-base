@@ -6,6 +6,7 @@ import useMessageStore from "../hooks/useMessageStore";
 import { DefaultUserId } from "../constants";
 import useConversationStore from "../hooks/useConversationStore";
 import InputTray from "../components/composite/InputTray";
+import ErrorPage from "./ErrorPage";
 
 function ConversationThread() {
   const userId = DefaultUserId; // STATE
@@ -33,7 +34,7 @@ function ConversationThread() {
   }, [activeConvId, newMessageList, userId, loadNewMessageList]);
 
   // #######################################################
-  if (!activeConvId) return <div>loading</div>;
+  if (!activeConvId) return <ErrorPage />;
   return (
     <div
       id="app-parent"
