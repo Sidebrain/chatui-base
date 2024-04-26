@@ -1,5 +1,6 @@
 import { DefaultUserId } from "@/constants";
-import backend, { ConversationBackendType } from "@/services/backendService";
+import backend from "@/services/backendService";
+import { ConversationBackendType } from "@/types/BackendDatabaseModelTypes";
 import { create } from "zustand";
 
 type ConversationState = {

@@ -17,11 +17,13 @@ type PillProps = {
 };
 
 const Pill = ({ text, textColor, bgColor, leftIcon }: PillProps) => {
+  const bgColorRendered = bgColor ? `bg-${bgColor}` : "bg-gray-800";
+  const textColorRendered = textColor ? `text-${textColor}` : "text-gray-50";
+  console.log("Pill", bgColorRendered, textColorRendered);
   return (
     <div
-      className={`rounded-sm ${bgColor ? `bg-${bgColor}` : "bg-gray-800"}
-      ${textColor ? `text-${textColor}` : "text-gray-50"}
-      flex items-center gap-1 px-2 py-1 text-xs`}
+      // className={`flex items-center gap-1 rounded-sm ${bgColorRendered} px-2 py-1 text-xs ${textColorRendered} `}
+      className={`flex items-center gap-1 rounded-sm bg-gray-700 px-2 py-1 text-xs text-gray-100 `}
     >
       {leftIcon}
       {text}
@@ -45,7 +47,9 @@ const TokenMetaData = ({
       <Pill
         leftIcon={iconToShow}
         text={
-          showCost ? prompt_tokens * llm.prompt_tokens_cost * 83 : prompt_tokens
+          showCost
+            ? (prompt_tokens * llm.prompt_tokens_cost * 83).toPrecision(3)
+            : prompt_tokens
         }
         bgColor="gray-200"
         textColor="gray-900"
@@ -54,20 +58,26 @@ const TokenMetaData = ({
         leftIcon={iconToShow}
         text={
           showCost
-            ? completion_tokens * llm.completion_tokens_cost * 83
+            ? (completion_tokens * llm.completion_tokens_cost * 83).toPrecision(
+                3,
+              )
             : completion_tokens
         }
-        bgColor="gray-400"
+        bgColor="gray-600"
+        textColor="gray-900"
       />
       <Pill
         leftIcon={iconToShow}
         text={
           showCost
-            ? prompt_tokens * llm.prompt_tokens_cost * 83 +
-              completion_tokens * llm.completion_tokens_cost * 83
+            ? (
+                prompt_tokens * llm.prompt_tokens_cost * 83 +
+                completion_tokens * llm.completion_tokens_cost * 83
+              ).toPrecision(3)
             : prompt_tokens + completion_tokens
         }
         bgColor="gray-600"
+        textColor="gray-900"
       />
     </div>
   );
@@ -82,7 +92,7 @@ const MetaDataBand = (props: MetaDataBandProps) => {
           bgColor="gray-800"
           textColor="gray-50"
         />
-        <Pill text={props.llm.model} bgColor="gray-600" />
+        <Pill text={props.llm.model} bgColor="gray-600" textColor="gray-900" />
       </div>
       <TokenMetaData {...props} />
     </div>

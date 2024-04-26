@@ -1,6 +1,6 @@
 import { FiEdit, FiGlobe } from "react-icons/fi";
 import StartNewChatButton from "./StartNewChatButton";
-import { ConversationBackendType } from "@/services/backendService";
+import { ConversationBackendType } from "@/types/BackendDatabaseModelTypes";
 import SidebarThreadEntry from "./composite/SidebarThreadEntry";
 
 type SidebarProps = {

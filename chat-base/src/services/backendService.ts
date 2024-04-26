@@ -5,22 +5,10 @@ import {
 import { LLMType, MessageBackendType } from "@/types/BackendDatabaseModelTypes";
 import { MessageFrontendType } from "@/hooks/MessageFrontendType";
 import ax from "@/services/axiosClient";
-
-export type AddMessagetoConversationType = {
-  message: Pick<MessageFrontendType, "content" | "role">;
-  userId: number;
-  convId: number;
-};
-
-export type ConversationBackendType = {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  owner_id: number;
-  summary: string;
-  description: string;
-  messages: MessageBackendType[];
-};
+import {
+  AddMessagetoConversationType,
+  ConversationBackendType,
+} from "@/types/BackendDatabaseModelTypes";
 
 const backend = {
   addMessagetoConversation: async ({

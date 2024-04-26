@@ -1,6 +1,5 @@
-import backend, {
-  AddMessagetoConversationType,
-} from "@/services/backendService";
+import backend from "@/services/backendService";
+import { AddMessagetoConversationType } from "@/types/BackendDatabaseModelTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AuthorizedAIResponseRequestType,

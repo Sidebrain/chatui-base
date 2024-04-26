@@ -31,3 +31,18 @@ export type AuthorizedAIResponseRequestType = {
   convId: number;
   selectedModel: LLMType;
 };
+export type AddMessagetoConversationType = {
+  message: Pick<MessageFrontendType, "content" | "role">;
+  userId: number;
+  convId: number;
+};
+
+export type ConversationBackendType = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  owner_id: number;
+  summary: string;
+  description: string;
+  messages: MessageBackendType[];
+};
