@@ -13,7 +13,7 @@ const TopBar = ({ handleMenuClick }: TopBarProps) => {
     mutate();
   };
   return (
-    <div className="sticky top-0 z-10 flex w-full items-center justify-between gap-2 bg-white px-4 py-1">
+    <div className=" sticky top-4 z-10 flex w-full items-center justify-between gap-2 rounded-lg p-4  backdrop-blur ">
       <FiMenu
         size={"24px"}
         className="focus:cursor-pointer"

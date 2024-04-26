@@ -1,5 +1,3 @@
-import { LLMType } from "./BackendDatabaseModelTypes";
-
 export type LLMType = {
   id: number;
   created_at: string;
@@ -21,6 +19,7 @@ export type MessageBackendType = {
   completion_tokens: number;
   cost: number;
   llm_id: number;
+  llm: LLMType;
 };
 export type AuthorizedConversationRequestType = {
   userId: number;
