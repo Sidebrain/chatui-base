@@ -7,7 +7,7 @@ import { MessageFrontendType } from "@/hooks/MessageFrontendType";
 import ax from "@/services/axiosClient";
 
 export type AddMessagetoConversationType = {
-  message: MessageFrontendType;
+  message: Pick<MessageFrontendType, "content" | "role">;
   userId: number;
   convId: number;
 };

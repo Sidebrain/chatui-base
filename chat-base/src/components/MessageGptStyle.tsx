@@ -19,13 +19,14 @@ const MessageGptStyle = ({
         className={`flex w-full items-start gap-4 hover:cursor-pointer ${role === "assistant" && "bg-gray-100 pl-2"} rounded-md p-4 `}
         onClick={() => setShowMetaData(!showMetaData)}
       >
-        <div className="flex items-start justify-center gap-2 self-stretch">
+        <div className="flex gap-2 self-stretch">
           <FiUser size={"24px"} />
         </div>
-        <div className="flex flex-col items-start gap-2 self-stretch text-left">
-          <div className="text-md self-stretch font-bold">{role}</div>
-          <div className="prose max-w-none self-stretch">
+        <div className="flex flex-col gap-2 text-left">
+          <div className="text-md font-bold">{role}</div>
+          <div className="prose max-w-[60vw] md:max-w-[37vw]">
             <Markdown>{content}</Markdown>
+            {/* {content} */}
           </div>
         </div>
       </div>
