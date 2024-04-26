@@ -10,9 +10,15 @@ type DisplayMessagesProps = {
 
 const DisplayAreaHelperPromptCards = () => {
   return (
-    <div className="flex flex-wrap content-center items-end justify-center gap-2 self-stretch px-4">
-      <HelperCard />
-      <HelperCard />
+    <div className="flex flex-col content-center items-end justify-center gap-2 self-stretch px-4">
+      <HelperCard
+        heading="New feature - Choose your Model"
+        secondaryText="You can now switch between different models. Select the model you want to use in the top bar"
+      />
+      <HelperCard
+        heading="New feature - click on a message to see its cost"
+        secondaryText="Click on an assistant response and see the cost of that message in Rupees at the bottom of the message. The cost is calculated based on the model used and the number of tokens in the message."
+      />
     </div>
   );
 };

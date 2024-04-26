@@ -22,9 +22,9 @@ const MessageGptStyle = ({
         <div className="flex gap-2 self-stretch">
           <FiUser size={"24px"} />
         </div>
-        <div className="flex flex-col gap-2 text-left">
+        <div className="flex flex-col gap-2 text-left ">
           <div className="text-md font-bold">{role}</div>
-          <div className="prose max-w-[60vw] md:max-w-[37vw]">
+          <div className=" prose max-w-[60vw] md:max-w-[37vw]">
             <Markdown>{content}</Markdown>
             {/* {content} */}
           </div>

@@ -8,7 +8,7 @@ type ConversationState = {
   conversations: ConversationBackendType[];
   // add isloading and error state
   initializeConversationStore: () => void;
-  setActiveConvId: (convId: number) => void;
+  setActiveConvId: (convId: number | null) => void;
   setConversations: (conversations: ConversationBackendType[]) => void;
   addConversation: (conversation: ConversationBackendType) => void;
   setAll: (

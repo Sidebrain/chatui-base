@@ -36,8 +36,10 @@ const TokenMetaData = ({
   completion_tokens,
   llm,
 }: MetaDataBandProps) => {
-  const [showCost, setShowCost] = useState<boolean>(false);
-  const [iconToShow, setIconToShow] = useState<React.ReactNode>(<FiHexagon />);
+  const [showCost, setShowCost] = useState<boolean>(true);
+  const [iconToShow, setIconToShow] = useState<React.ReactNode>(
+    <LuIndianRupee />,
+  );
   const handleSwitchView = () => {
     setShowCost(() => !showCost);
     setIconToShow(() => (showCost ? <FiHexagon /> : <LuIndianRupee />));

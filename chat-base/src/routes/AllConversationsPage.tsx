@@ -9,13 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 const AllConversationsPage = () => {
   const navigate = useNavigate();
-  const { initializeConversationStore, conversations } = useConversationStore(
-    (state) => ({
+  const { initializeConversationStore, conversations, setActiveConvId } =
+    useConversationStore((state) => ({
       initializeConversationStore: state.initializeConversationStore,
       conversations: state.conversations,
       activeConvId: state.activeConvId,
-    }),
-  );
+      setActiveConvId: state.setActiveConvId,
+    }));
 
   const { initializeMetaContextStore } = useMetaContextStore((state) => ({
     initializeMetaContextStore: state.initializeMetaContextStore,
@@ -29,6 +29,7 @@ const AllConversationsPage = () => {
 
   useEffect(() => {
     initializeConversationStore();
+    setActiveConvId(null);
   }, [initializeConversationStore]);
 
   useEffect(() => {
