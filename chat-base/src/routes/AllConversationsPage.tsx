@@ -1,10 +1,14 @@
 import TimelineEntry from "@/components/TimelineEntry";
+import { DefaultUserId } from "@/constants";
+import { useCreateConversationForUserId } from "@/hooks/useBackendQueries";
 import useConversationStore from "@/hooks/useConversationStore";
 import useMetaContextStore from "@/hooks/useMetaContextStore";
 import { useEffect } from "react";
 import { FiEdit, FiHome } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const AllConversationsPage = () => {
+  const navigate = useNavigate();
   const { initializeConversationStore, conversations } = useConversationStore(
     (state) => ({
       initializeConversationStore: state.initializeConversationStore,
@@ -16,6 +20,12 @@ const AllConversationsPage = () => {
   const { initializeMetaContextStore } = useMetaContextStore((state) => ({
     initializeMetaContextStore: state.initializeMetaContextStore,
   }));
+
+  const { mutate } = useCreateConversationForUserId(DefaultUserId);
+  const handleNewChatClick = () => {
+    mutate();
+    navigate("/conversation");
+  };
 
   useEffect(() => {
     initializeConversationStore();
@@ -46,7 +56,7 @@ const AllConversationsPage = () => {
         </div>
         <h2 className="flex text-2xl font-semibold">All Conversations</h2>
         <div className="flex rounded-md bg-gray-50 p-1 focus:cursor-pointer">
-          <FiEdit size={"24px"} onClick={() => {}} />
+          <FiEdit size={"24px"} onClick={handleNewChatClick} />
         </div>
       </div>
       <div className="flex flex-col items-center gap-4">
