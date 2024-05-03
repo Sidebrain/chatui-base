@@ -45,7 +45,7 @@ const TokenMetaData = ({
     setIconToShow(() => (showCost ? <FiHexagon /> : <LuIndianRupee />));
   };
   return (
-    <div className="flex items-start gap-1" onClick={handleSwitchView}>
+    <div className="flex grow justify-end gap-1" onClick={handleSwitchView}>
       <Pill
         leftIcon={iconToShow}
         text={
@@ -87,8 +87,8 @@ const TokenMetaData = ({
 
 const MetaDataBand = (props: MetaDataBandProps) => {
   return (
-    <div className="flex justify-between hover:cursor-pointer">
-      <div className="flex items-start gap-1">
+    <div className="flex flex-wrap gap-2 hover:cursor-pointer">
+      <div className="flex grow items-start gap-1">
         <Pill
           text={props.llm.provider}
           bgColor="gray-800"
