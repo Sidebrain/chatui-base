@@ -1,0 +1,48 @@
+name: Continuous deployment of frontend to digital ocean production
+
+on:
+    push:
+        branches:
+            - development
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: change directory
+              run: cd chat-base
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build
+              run: npm run build
+
+            - name: Deploy to server via SSH
+              uses: easingthemes/ssh-deploy@v5.0.3
+              with:
+                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+                  ARGS: "-avz --delete"
+                  SOURCE: "dist/"
+                  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+                  REMOTE_USER: ${{ secrets.REMOTE_USER }}
+                  TARGET: "/rsync-test/"
+
+            - name: Deploy to Digital Ocean
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.DIGITAL_OCEAN_HOST }}
+                  username: ${{ secrets.DIGITAL_OCEAN_USERNAME }}
+                  key: ${{ secrets.DIGITAL_OCEAN_PRIVATE_KEY }}
+                  script: |
+                      cd /rsync-test/
+                      echo "Hello I succeeded" >> touch test.txt
