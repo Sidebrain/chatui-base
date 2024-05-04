@@ -24,7 +24,7 @@ app.include_router(conversation_router.router, tags=["conversation"])
 
 @app.get("/", status_code=200)
 def root() -> dict:
-    return {"HWE": "I seem to be working correctly"}
+    return {"HWE": "Woweee, I seem to be working correctly"}
 
 
 if __name__ == "__main__":
