@@ -6,6 +6,7 @@ name: Continuous deployment to docker registry
             - staging
         paths:
             - backend/**
+            - .github/workflows/cd-backend-staging.yaml
 
 jobs:
     build:
@@ -29,7 +30,7 @@ jobs:
               with:
                   context: ./backend
                   file: ./backend/Dockerfile
-                  platforms: linux/arm64
+                  platforms: linux/arm64, linux/amd64
                   push: true
                   tags: ${{ vars.DOCKER_USERNAME }}/myapp-staging:latest
 
