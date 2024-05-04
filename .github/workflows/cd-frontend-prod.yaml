@@ -22,11 +22,11 @@ jobs:
               run: cd chat-base
 
             - name: Install dependencies
-              working-directory: ./chatui-base/chat-base
+              working-directory: ./chat-base
               run: npm ci
 
             - name: Build
-              working-directory: ./chatui-base/chat-base
+              working-directory: ./chat-base
               run: npm run build
 
             - name: Deploy to server via SSH
@@ -34,7 +34,7 @@ jobs:
               with:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
                   ARGS: "-avz --delete"
-                  SOURCE: "./chatui-base/chat-base/dist/"
+                  SOURCE: "./chat-base/dist/"
                   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
                   REMOTE_USER: ${{ secrets.REMOTE_USER }}
                   TARGET: "/rsync-test/"
