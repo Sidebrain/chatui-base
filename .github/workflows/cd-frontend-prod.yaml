@@ -34,14 +34,14 @@ jobs:
                   SOURCE: "./chat-base/dist/"
                   REMOTE_HOST: ${{ vars.REMOTE_HOST }}
                   REMOTE_USER: ${{ vars.REMOTE_USER }}
-                  TARGET: "/rsync-test/"
+                  TARGET: "rsync-test/"
 
             - name: Deploy to Digital Ocean
               uses: appleboy/ssh-action@master
               with:
-                  host: ${{ secrets.DIGITAL_OCEAN_HOST }}
-                  username: ${{ secrets.DIGITAL_OCEAN_USERNAME }}
-                  key: ${{ secrets.DIGITAL_OCEAN_PRIVATE_KEY }}
+                  host: ${{ vars.REMOTE_HOST }}
+                  username: ${{ vars.REMOTE_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
-                      cd /rsync-test/
+                      cd rsync-test/
                       echo "Hello I succeeded" >> touch test.txt
