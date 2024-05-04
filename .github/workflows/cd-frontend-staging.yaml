@@ -3,7 +3,7 @@ name: Continuous deployment of frontend to digital ocean production
 on:
     push:
         branches:
-            - main
+            - staging
         paths:
             - "chat-base/**"
 
@@ -26,7 +26,7 @@ jobs:
 
             - name: Build
               working-directory: ./chat-base
-              run: npm run build:production
+              run: npm run build:staging
 
             - name: Deploy to server via SSH
               uses: easingthemes/ssh-deploy@v5.0.3
@@ -36,7 +36,7 @@ jobs:
                   SOURCE: "./chat-base/dist/"
                   REMOTE_HOST: ${{ vars.REMOTE_HOST }}
                   REMOTE_USER: ${{ vars.REMOTE_USER }}
-                  TARGET: "/usr/share/nginx/html"
+                  TARGET: "/usr/share/nginx/html-staging"
 
             - name: reload nginx inside Digital Ocean
               uses: appleboy/ssh-action@master

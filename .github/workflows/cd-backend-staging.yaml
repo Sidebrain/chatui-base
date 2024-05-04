@@ -3,7 +3,7 @@ name: Continuous deployment to docker registry
 "on":
     push:
         branches:
-            - main
+            - staging
         paths:
             - backend/**
 
@@ -31,7 +31,7 @@ jobs:
                   file: ./backend/Dockerfile
                   platforms: linux/arm64
                   push: true
-                  tags: ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
+                  tags: ${{ vars.DOCKER_USERNAME }}/myapp-staging:latest
 
     run-docker:
         needs: build
@@ -45,6 +45,6 @@ jobs:
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
                       cd build-context
-                      docker compose pull ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
-                      docker compose up -d ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
-                      echo "[BE] Prod github action succeeded" >> prod-git-action.log
+                      docker compose pull ${{ vars.DOCKER_USERNAME }}/myapp-staging:latest
+                      docker compose up -d ${{ vars.DOCKER_USERNAME }}/myapp-staging:latest
+                      echo "[BE] Staging github action succeeded" >> prod-git-action.log
