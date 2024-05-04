@@ -18,9 +18,6 @@ jobs:
               with:
                   node-version: "18"
 
-            - name: change directory
-              run: cd chat-base
-
             - name: Install dependencies
               working-directory: ./chat-base
               run: npm ci
@@ -35,8 +32,8 @@ jobs:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
                   ARGS: "-avz --delete"
                   SOURCE: "./chat-base/dist/"
-                  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-                  REMOTE_USER: ${{ secrets.REMOTE_USER }}
+                  REMOTE_HOST: ${{ vars.REMOTE_HOST }}
+                  REMOTE_USER: ${{ vars.REMOTE_USER }}
                   TARGET: "/rsync-test/"
 
             - name: Deploy to Digital Ocean
