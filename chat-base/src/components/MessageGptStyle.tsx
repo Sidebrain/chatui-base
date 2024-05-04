@@ -14,20 +14,19 @@ const MessageGptStyle = ({
 }: MessageFrontendType) => {
   const [showMetaData, setShowMetaData] = useState<boolean>(false);
   return (
-    <div className="flex w-full flex-col gap-2 ">
-      <div
-        className={`flex w-full items-start gap-4 hover:cursor-pointer ${role === "assistant" && "bg-gray-100 pl-2"} rounded-md p-4 `}
-        onClick={() => setShowMetaData(!showMetaData)}
-      >
-        <div className="flex gap-2 self-stretch">
-          <FiUser size={"24px"} />
-        </div>
-        <div className="flex flex-col gap-2 text-left ">
-          <div className="text-md font-bold">{role}</div>
-          <div className=" prose max-w-[60vw] md:max-w-[37vw]">
-            <Markdown>{content}</Markdown>
-            {/* {content} */}
-          </div>
+    <div
+      className={`flex w-full flex-col gap-4 rounded-md p-4 ${role === "assistant" && "bg-gray-100 hover:cursor-pointer "}`}
+      onClick={() => setShowMetaData(!showMetaData)}
+    >
+      <div className={`flex w-full items-start gap-4 rounded-md `}>
+        <FiUser size={"24px"} />
+        <div className="text-md font-bold">{role}</div>
+      </div>
+      <div className="flex w-full gap-2 text-left ">
+        {/* <div className=" prose max-w-[60vw] md:max-w-[37vw]"> */}
+        <div className=" prose max-w-[100ch] prose-li:list-outside">
+          <Markdown>{content}</Markdown>
+          {/* {content} */}
         </div>
       </div>
       {showMetaData && role === "assistant" && llm && (
