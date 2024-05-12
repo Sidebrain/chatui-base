@@ -46,6 +46,6 @@ jobs:
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
                       cd build_context
-                      docker compose pull ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
-                      docker compose up -d ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
+                      docker compose pull backend-production
+                      docker compose up -d backend-production
                       echo "[BE] Prod github action succeeded" >> prod-git-action.log
