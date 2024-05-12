@@ -11,10 +11,12 @@ class LLMBase(BaseModel):
 
 
 class LLMCreate(LLMBase):
+    enabled: bool = True
     pass
 
 
 class LLMUpdate(LLMBase):
+    enabled: bool
     pass
 
 

@@ -29,7 +29,7 @@ jobs:
               uses: docker/build-push-action@v5
               with:
                   context: ./backend
-                  file: ./backend/Dockerfile
+                  file: ./backend/Dockerfile.production
                   platforms: linux/arm64, linux/amd64
                   push: true
                   tags: ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
@@ -45,7 +45,7 @@ jobs:
                   username: ${{ vars.REMOTE_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
-                      cd build-context
-                      docker compose pull ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
-                      docker compose up -d ${{ vars.DOCKER_USERNAME }}/myapp-prod:latest
+                      cd build_context
+                      docker compose pull backend-production
+                      docker compose up -d backend-production
                       echo "[BE] Prod github action succeeded" >> prod-git-action.log

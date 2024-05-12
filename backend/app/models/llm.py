@@ -17,6 +17,7 @@ class LLM(Base):
     messages: Mapped[List["Message"]] = relationship(
         back_populates="llm", lazy="dynamic"
     )
+    enabled: Mapped[bool] = mapped_column(default=True, nullable=False)
 
     def __repr__(self) -> str:
         return f"<LLM {self.id} {self.provider} {self.model}>"

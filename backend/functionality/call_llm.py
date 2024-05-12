@@ -5,6 +5,11 @@ from .llm_clients import openai_client
 import logging
 
 logger = logging.getLogger(__name__)
+fh = logging.FileHandler("logs/openai-response.log")
+# fh.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 
 def get_chat_response_from_openai(messages: list[models.Message]) -> ChatCompletionType:
@@ -32,6 +37,7 @@ def get_chat_response_from_openai(messages: list[models.Message]) -> ChatComplet
         temperature=1.0,
         top_p=1,
     )
+    logger.debug(f"Response from api:\n{completion}")
     # doing this to convert the return type to a pydantic object
     completion_pydantic_obj = ChatCompletionType.model_validate(
         obj=completion,
