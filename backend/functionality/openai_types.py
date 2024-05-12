@@ -26,7 +26,7 @@ class ChatCompletionType(BaseModel):
     object: str
     created: datetime.datetime = Field(..., alias="created")
     model: str
-    system_fingerprint: str
+    system_fingerprint: str | None
     choices: List[ChoiceType]
     usage: UsageType
 
