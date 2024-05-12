@@ -7,7 +7,7 @@ from app.routers import conversation_router
 import logging
 
 # global logging level
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 
 app = FastAPI()
 

@@ -13,10 +13,11 @@ import logging
 
 # the log level is being set globally via basicConfig in main.py, use this overwrite but revert back after youre done testing
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler("logs/app.log")
 # fh.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 router = APIRouter(

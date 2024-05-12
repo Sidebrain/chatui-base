@@ -38,6 +38,11 @@ Context: You have made changes to the sql database. Eg: Added models, schemas, o
 
 -   Use `dot-env` to load the .env variables into the environment and read the respective url
     `config.set_main_option('sqlalchemy.url', os.getenv('SUPABASE_DIRECT_URL'))`
+    -   the `config.set_main_option` function is used to override the values in the `alembic.ini` file
+-   Import the Base model from the models directory
+    `from app.models.base_class import Base`
+-   Add the `target_metadata` to the `env.py` file
+    `target_metadata = Base.metadata`
 
 3. Generate the migration script
 
