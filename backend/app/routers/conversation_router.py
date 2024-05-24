@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 from sqlalchemy.orm import Session
 
-from functionality.call_llm import get_chat_response_from_openai
+from functionality.call_llm import get_chat_response
 from functionality.openai_types import ChatCompletionType
 from app import models, schemas, deps, crud
 
@@ -149,25 +149,8 @@ def converse(
         raise HTTPException(status_code=409, detail="Conversation has no messages")
 
     # 2 Get response from api
-    response: ChatCompletionType = get_chat_response_from_openai(conversation.messages)
-    logger.debug(f"Response received from OpenAI")
+    response_msg = get_chat_response(conv_id, conversation.messages, llm)
 
-    # 2.1 get the cost of the response
-    cost = (
-        llm.prompt_tokens_cost * response.usage.prompt_tokens
-        + llm.completion_tokens_cost * response.usage.completion_tokens
-    )
-
-    # 3 Add response to db
-    response_msg = schemas.MessageCreate(
-        content=response.choices[0].message.content,
-        role=response.choices[0].message.role,
-        conv_id=conv_id,
-        prompt_tokens=response.usage.prompt_tokens,
-        completion_tokens=response.usage.completion_tokens,
-        cost=cost,
-        llm_id=llm.id,
-    )
     response_msg_db = crud.message.add_message_to_conversation(
         db, user_id, conv_id, response_msg
     )

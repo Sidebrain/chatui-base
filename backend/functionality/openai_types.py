@@ -35,3 +35,15 @@ class ChatCompletionType(BaseModel):
     @classmethod
     def transform(cls, timestamp: int):
         return datetime.datetime.fromtimestamp(timestamp)
+
+class OpenAIRequest(BaseModel):
+    messages: List[MessageType]
+    model: str
+    frequency_penalty: float = 0.0
+    logprobs: bool = False
+    max_tokens: int | None = None
+    n: int = 1
+    presence_penalty: float = 0.0
+    temperature: float = 0.5
+    top_p: float = 1.0
+    stop: Optional[List[str]] = None
