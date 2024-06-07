@@ -1,13 +1,14 @@
+from fastapi.responses import RedirectResponse
 import uvicorn
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import conversation_router
+from app.routers import conversation_router, auth
 
 import logging
 
 # global logging level
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
@@ -20,11 +21,12 @@ app.add_middleware(
 )
 
 app.include_router(conversation_router.router, tags=["conversation"])
+app.include_router(auth.router, tags=["auth"])
 
 
 @app.get("/", status_code=200)
 def root() -> dict:
-    return {"HWE": "Woweee, I seem to be working correctly"}
+    return RedirectResponse(url="/docs")
 
 
 if __name__ == "__main__":

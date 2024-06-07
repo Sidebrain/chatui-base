@@ -12,14 +12,20 @@ formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 fh.setFormatter(formatter)
 logger.addHandler(fh)
 
-def get_chat_response(conv_id: int, messages: list[models.Message],  llm: schemas.LLM) -> schemas.MessageCreate:
+
+def get_chat_response(
+    conv_id: int, messages: list[models.Message], llm: schemas.LLM
+) -> schemas.MessageCreate:
     match llm.provider:
         case "openai":
             return get_chat_response_from_openai(conv_id, messages, llm)
         case "anthropic":
             return get_chat_response_from_anthropic(conv_id, messages, llm)
 
-def get_chat_response_from_openai(conv_id: int, messages: list[models.Message],   llm: schemas.LLM) -> ChatCompletionType:
+
+def get_chat_response_from_openai(
+    conv_id: int, messages: list[models.Message], llm: schemas.LLM
+) -> ChatCompletionType:
     """
     Get a response from the OpenAI API
     """
@@ -38,9 +44,7 @@ def get_chat_response_from_openai(conv_id: int, messages: list[models.Message], 
         top_p=1,
     )
     logger.debug(f"Request body to OpenAI:\n{request_body}")
-    completion = openai_client.chat.completions.create(
-        **request_body.model_dump()
-    )
+    completion = openai_client.chat.completions.create(**request_body.model_dump())
     logger.debug(f"Response received from OpenAI")
     logger.debug(f"Response from api:\n{completion}")
     # doing this to convert the return type to a pydantic object
@@ -48,7 +52,7 @@ def get_chat_response_from_openai(conv_id: int, messages: list[models.Message], 
         obj=completion,
         from_attributes=True,
     )
-    
+
     # 2.1 get the cost of the response
     cost = (
         llm.prompt_tokens_cost * response.usage.prompt_tokens
@@ -67,7 +71,10 @@ def get_chat_response_from_openai(conv_id: int, messages: list[models.Message], 
     )
     return response_msg
 
-def get_chat_response_from_anthropic(conv_id: int, messages: list[models.Message], llm: schemas.LLM) -> AnthropicMessageResponse:
+
+def get_chat_response_from_anthropic(
+    conv_id: int, messages: list[models.Message], llm: schemas.LLM
+) -> AnthropicMessageResponse:
     """
     Get a response from the Anthropc API
     """
@@ -77,8 +84,8 @@ def get_chat_response_from_anthropic(conv_id: int, messages: list[models.Message
     # removing system message for anthropic becuase the first message has to come from the user
     messages = [{"role": msg.role, "content": msg.content} for msg in messages]
     request_body = AnthropicRequestBody(
-        max_tokens = 1024,
-        messages = messages,
+        max_tokens=1024,
+        messages=messages,
         model=llm.model,
         temperature=0.5,
     )
