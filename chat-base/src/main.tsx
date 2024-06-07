@@ -7,10 +7,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AllConversationsPage from "./routes/AllConversationsPage.tsx";
 import App from "./routes/App.tsx";
 import ErrorPage from "./routes/ErrorPage.tsx";
+import LoginPage from "./routes/login.tsx";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
   {
     path: "/",
     element: <App />,
