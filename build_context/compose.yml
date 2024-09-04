@@ -1,0 +1,27 @@
+services:
+    backend-production:
+        image: anudeepy/myapp-prod:latest
+        container_name: backend-production
+        volumes:
+            - ./logs/production:/chatui-base/backend/logs
+        ports:
+            - 8008:8008
+        env_file:
+            - ./.env.backend.prod
+        networks:
+            - default
+    backend-staging:
+        image: anudeepy/myapp-staging:latest
+        container_name: backend-staging
+        volumes:
+            - ./logs/staging/:/chatui-base/backend/logs
+        ports:
+            - 8018:8018
+        env_file:
+            - ./.env.backend.staging
+        networks:
+            - default
+networks:
+    default:
+        name: chat-network
+        driver: bridge

@@ -1,0 +1,15 @@
+{
+	"eslint.codeActionsOnSave.rules": null,
+	"[python]": {
+		"diffEditor.ignoreTrimWhitespace": false,
+		"gitlens.codeLens.symbolScopes": [
+			"!Module"
+		],
+		"editor.defaultFormatter": "ms-python.black-formatter",
+		"editor.formatOnSave": true,
+		"editor.wordBasedSuggestions": "off",
+	},
+	"json.schemas": [
+		
+	]
+}

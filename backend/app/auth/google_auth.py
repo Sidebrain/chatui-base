@@ -73,7 +73,7 @@ class GoogleOauthClient(AbstractOauthBaseClient):
         redirect_uri: str,
         oauth_url: str,
         token_exchange_url: str,
-        access_type: str = "offline",
+        access_type: Literal["offline", "online"] = "online",
         response_type: str = "code",
         include_granted_scopes: str = "true",
     ) -> None:

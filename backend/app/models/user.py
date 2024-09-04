@@ -19,6 +19,7 @@ class User(Base):
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=now(), onupdate=now(), nullable=False
     )
+    sessions: Mapped[List["Session"]] = relationship(back_populates="user")
 
     def __repr__(self):
         return f"<User {self.username}>"
